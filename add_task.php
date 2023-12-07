@@ -8,8 +8,8 @@ if (isset($_POST["createTask"])){
         $taskName = isset($_POST["taskName"]) ? $_POST["taskName"] : '';
         $taskDesc = isset($_POST["taskDescription"]) ? $_POST["taskDescription"] : '';
         $taskDueDate = isset($_POST["taskDueDate"]) ? $_POST["taskDueDate"] : '';
-        $taskPriority = isset($_SESSION["taskPriority"]) ? $_SESSION["taskPriority"] : '';
-        $taskStatus = isset($_SESSION["taskStatus"]) ? $_SESSION["taskStatus"] : '';
+        $taskPriority = isset($_POST["taskPriority"]) ? $_POST["taskPriority"] : '';
+        $taskStatus = isset($_POST["taskStatus"]) ? $_POST["taskStatus"] : '';
     }else{
         echo "No project selected.";
     }
