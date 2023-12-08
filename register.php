@@ -81,7 +81,7 @@
                     type="password" class="form-control" placeholder="Enter your password" />
                 </div>
                 <input name="register" type="submit"
-                value="Register" class="btn btn-primary"/>
+                value="Register" class="btn btn-danger"/>
             </form> 
         </div>   
 </body>
