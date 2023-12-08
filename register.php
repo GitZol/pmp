@@ -81,7 +81,8 @@
                     type="password" class="form-control" placeholder="Enter your password" />
                 </div>
                 <input name="register" type="submit"
-                value="Register" class="btn btn-danger"/>
+                value="Register" class="btn btn-primary"/>
+                <a href="login.php">already have an account?</a>
             </form> 
         </div>   
 </body>
