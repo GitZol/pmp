@@ -83,6 +83,6 @@
                 <input name="register" type="submit"
                 value="Register" class="btn btn-primary"/>
             </form> 
-        </div>
+        </div>        
 </body>
 </html>
