@@ -82,7 +82,8 @@
                 </div>
                 <input name="register" type="submit"
                 value="Register" class="btn btn-primary"/>
+                <a href="login.php">already have an account?</a>
             </form> 
-        </div>        
+        </div>   
 </body>
 </html>
