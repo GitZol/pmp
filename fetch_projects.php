@@ -6,9 +6,14 @@
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" defer></script>
+
     <style>
         #task-details {
             list-style-type: none;
+        }
+
+        .collapse {
+            transition: height 0.3s ease-in-out !important;
         }
     </style>
 </head>
@@ -57,7 +62,11 @@
                         echo "<h4> Tasks in " . $row["ProjectName"] . ":</h4>";
                         echo "<ul>";
                         while ($task_row = $task_query->fetch_assoc()) {
-                            echo "<li id='task-details'>" . $task_row["TaskName"] . " - " . $task_row["Description"] . " - " . $task_row["DueDate"] . " - " . $task_row["Priority"] . " - " . $task_row["Status"] . "</li>";
+                            echo "<li id='task-details'>" . $task_row["TaskName"] . " - " . $task_row["Description"] . " - " . $task_row["DueDate"] . " - " . $task_row["Priority"] . " - " . $task_row["Status"];
+
+                            echo '<button class="btn btn-secondary btn-sm more-btn" data-taskid="' . $task_row["TaskID"] . '"data-taskname="' . $task_row["TaskName"] . '">More</button>';
+
+                            echo "</li>";
 
                             echo "<form action='delete_task.php' method='post' style='display: inline-block;'>";
                             echo "<input type='hidden' name='taskID' value='" . $task_row["TaskID"] . "'>";
@@ -113,6 +122,7 @@
                     echo '</div>';
                     echo '</div>';
                     echo "</div>";
+                    echo "</div>";
                 }
 
             } else {
@@ -127,19 +137,18 @@
         ?>
     </div>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var addTaskButtons = document.querySelectorAll('[id^="addTaskBtn"]');
-    addTaskButtons.forEach(function(addTaskBtn) {
-      addTaskBtn.addEventListener('click', function() {
-        var projectID = addTaskBtn.getAttribute('id').replace('addTaskBtn', '');
-        var addTaskModal = document.getElementById('addTaskModal' + projectID);
-        var modal = new bootstrap.Modal(addTaskModal);
-        modal.show();
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+        const addTaskButtons = document.querySelectorAll('[id^="addTaskBtn"]');
+        addTaskButtons.forEach(function(addTaskBtn) {
+            addTaskBtn.addEventListener('click', function() {
+            var projectID = addTaskBtn.getAttribute('id').replace('addTaskBtn', '');
+            var addTaskModal = document.getElementById('addTaskModal' + projectID);
+            var modal = new bootstrap.Modal(addTaskModal);
+            modal.show();
+        });
     });
-  });
+});
 </script>
-
 </body>
 </html>
 
