@@ -41,6 +41,8 @@
 
                 if ($stmt->execute()) {
                     echo "New account created successfully!";
+                    sleep(2);
+                    header("Location: login.php");
                 } else {
                     echo "Error: ". $stmt->error;
                 }

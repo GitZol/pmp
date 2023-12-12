@@ -49,7 +49,7 @@
                     $_SESSION["UserID"] = $UserID;
                     $_SESSION["Username"] = $username;
 
-                    header("Location: home.php");
+                    header("Location: account.php");
                     exit();
                 } else {
                     echo $password_retrieve_error;
