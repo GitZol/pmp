@@ -1,43 +1,37 @@
-<?php
-// Database connection
-$conn = new mysqli('localhost', 'root', '', 'project_management_platform');
-if ($conn->connect_error) {
-    die('Connection failed: ' . $conn->connect_error);
-}
+<?php 
+// session_start();
 
-// Session initialization
-session_start();
+// if (isset($_SESSION["UserID"])) {
+//     $userID = $_SESSION["UserID"];
 
-// Retrieve the user's ID from the session
-$userID = $_SESSION['UserID'];
+//     $hostname = "127.0.0.1";
+//     $username = "root";
+//     $password = "";
+//     $db_name = "project_management_platform";
 
-// Validate the user's identity
-if (!$userID) {
-    echo "Invalid user ID. Please login to access this page.";
-    exit();
-}
+//     $mysqli = new mysqli($hostname, $username, $password, $db_name);
 
-// Confirm the deletion
-if (isset($_POST['confirmDelete']) && $_POST['confirmDelete'] == 'yes') {
-    // Prepare the SQL query to delete the account
-    $sql = "DELETE FROM user WHERE userID='$userID'";
+//     if ($mysqli->connect_error) {
+//         die("Connection failed: ". $mysqli->connect_error);
+//     }
 
-    // Execute the query
-    if ($conn->query($sql) === TRUE) {
-        echo "Your account has been successfully deleted.";
+//     $delete_query = $mysqli->prepare("DELETE FROM user WHERE UserID = ?");
+//     $delete_query->bind_param("i", $userID);
 
-        // Destroy the session to log the user out
-        session_destroy();
+//     if($delete_query->execute() ) {
+//         session_destroy();
+//         header("Location: login.php");
+//     } else {
+//         echo "Error: Unable to delete this user.";
+//     }
 
-        // Redirect to the login page
-        header('Location: login.php');
-    } else {
-        echo "An error occurred while deleting your account: " . $conn->error;
-    }
-} else {
-    echo "Are you sure you want to delete your account?";
-}
+//     $delete_query->close();
+//     $mysqli->close();
+// } else {
+//     header("Location: home.php");
+//     exit();
+// }
 
-// Close the database connection
-$conn->close();
+// $conn->close();
+echo "I love cock";
 ?>

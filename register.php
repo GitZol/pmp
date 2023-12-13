@@ -25,11 +25,10 @@
                 }
 
                 $stmt = $mysqli->prepare(
-                    "INSERT INTO user (Username, Email, Password,FirstName,LastName)
-                    VALUES (?, ?, ?,?,?)"
+                    "INSERT INTO user (Username, Email, Password, FirstName, LastName) VALUES (?, ?, ?, ?, ?)"
                 );
 
-                $stmt->bind_param("sssss", $username, $email, $password,$FistName,$LastName,);
+                $stmt->bind_param("sssss", $username, $email, $password, $FistName, $LastName,);
 
                 $username = $_POST["username"];
                 $email = $_POST["email"];
@@ -54,38 +53,40 @@
 
             <form action="register.php" method="post">
                 <div class="mb-3">
-                    <label for="FirstName">First name:</label>
+                    <label for="FirstName" class="text-secondary" style="font-weight: 500;">First name:</label>
                     <input id="FirstName" name="FirstName" required=""
                     type="text" class="form-control" placeholder="Enter your first name" />
-                    <small id="FirstNameHelp" class="form-text text-muted">Choose a first name.</small>
+                    <small id="FirstNameHelp" class="form-text text-muted">What's your first name?</small>
                 </div>
                 <div class="mb-3">
-                    <label for="LastName">Last name:</label>
+                    <label for="LastName" class="text-secondary" style="font-weight: 500;">Last name:</label>
                     <input id="LastName" name="LastName" required=""
                     type="text" class="form-control" placeholder="Enter your last name" />
-                    <small id="LastNameHelp" class="form-text text-muted">Choose a last name.</small>
+                    <small id="LastNameHelp" class="form-text text-muted">What's your last name?</small>
                 </div>
                 <div class="mb-3">
-                    <label for="username">Username:</label>
+                    <label for="username" class="text-secondary" style="font-weight: 500;">Username:</label>
                     <input id="username" name="username" required=""
                     type="text" class="form-control" placeholder="Enter your username" />
-                    <small id="usernameHelp" class="form-text text-muted">Choose a username.</small>
+                    <small id="usernameHelp" class="form-text text-muted">Pick a username (You can change this later)</small>
                 </div>
                 <div class="mb-3">
-                    <label for="email">Email:</label>
+                    <label for="email" class="text-secondary" style="font-weight: 500;">Email:</label>
                     <input id="email" name="email" required=""
                     type="email" class="form-control" placeholder="Enter your email address"/>
-                    <small id="emailHelp" class="form-text text-muted">Your email will not be shared with anyone else.</small>
+                    <small id="emailHelp" class="form-text text-muted">What's your email?</small>
                 </div>
                 <div class="mb-3">
-                    <label for="password">Password:</label>
+                    <label for="password" class="text-secondary" style="font-weight: 500;">Password:</label>
                     <input id="password" name="password" required=""
                     type="password" class="form-control" placeholder="Enter your password" />
+                    <small id="passwordHelp" class="form-text text-muted">Should be super secure!</small>
                 </div>
                 <input name="register" type="submit"
                 value="Register" class="btn btn-primary"/>
-                <a href="login.php">already have an account?</a>
-            </form> 
+            </form>
+            <hr class="hr hr-blurry" />
+            <p class="text-secondary"><a href="login.php" style="text-decoration: none; color: inherit;">Already have an account?</a></p>
         </div>   
 </body>
 </html>
