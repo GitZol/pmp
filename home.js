@@ -196,9 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             if (data.success) {
-                // Comment added successfully
-                fetchComments(currentTaskID); // Update comments after adding
-                document.getElementById('newComment').value = ''; // Clear the comment field
+                
+                fetchComments(currentTaskID);
+                document.getElementById('newComment').value = ''; 
             } else {
                 alert('Error adding comment: ' + data.message);
             }
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
     showFormButton.addEventListener('click', function() {
         createProjectModal.show();
     });
-    // Close expanded project when clicking outside the expanded section
+    
     document.addEventListener('click', function(event) {
         const isOutsideProject = !event.target.closest('.collapse');
         if (isOutsideProject) {
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Prevent collapse when clicking inside the side menu on elements that are not collapse triggers
+    
     document.querySelector('.side-menu').addEventListener('click', function(event) {
         const isInsideSideMenu = event.target.closest('.side-menu');
         const isCollapseTrigger = event.target.closest('[data-bs-toggle="collapse"]');

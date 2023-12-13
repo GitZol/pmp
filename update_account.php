@@ -18,7 +18,6 @@ if ($mysqli->connect_error) {
 
 $userID = $_SESSION["UserID"];
 
-// Fetch the original user data
 $query = "SELECT * FROM user WHERE UserID = ?";
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $userID);
