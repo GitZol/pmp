@@ -29,18 +29,20 @@
                     VALUES (?, ?, ?,?,?)"
                 );
 
-                $stmt->bind_param("sssss", $username, $email, $password,$FistName,$LastName,);
+                $stmt->bind_param("sssss", $username, $email, $password,$firstName,$lastName,);
 
                 $username = $_POST["username"];
                 $email = $_POST["email"];
                 $password = $_POST["password"];
-                $FistName = $_POST["FirstName"];
-                $LastName = $_POST["LastName"];
+                $firstName = $_POST["firstName"];
+                $lastName = $_POST["lastName"];
 
                 $password = password_hash($password, PASSWORD_DEFAULT);
 
                 if ($stmt->execute()) {
                     echo "New account created successfully!";
+                    header("Location: login.php");
+                    exit();
                 } else {
                     echo "Error: ". $stmt->error;
                 }
@@ -52,14 +54,14 @@
 
             <form action="register.php" method="post">
                 <div class="mb-3">
-                    <label for="FirstName">First name:</label>
-                    <input id="FirstName" name="FirstName" required=""
+                    <label for="firstName">First name:</label>
+                    <input id="firstName" name="firstName" required=""
                     type="text" class="form-control" placeholder="Enter your first name" />
                     <small id="FirstNameHelp" class="form-text text-muted">Choose a first name.</small>
                 </div>
                 <div class="mb-3">
-                    <label for="LastName">Last name:</label>
-                    <input id="LastName" name="LastName" required=""
+                    <label for="lastName">Last name:</label>
+                    <input id="lastName" name="lastName" required=""
                     type="text" class="form-control" placeholder="Enter your last name" />
                     <small id="LastNameHelp" class="form-text text-muted">Choose a last name.</small>
                 </div>
