@@ -62,7 +62,7 @@
                 echo "<p>Email: " . $row["Email"] . "</p>";
                 echo "<p>First Name: " . $row["FirstName"] . "</p>";
                 echo "<p>Last Name: " . $row["LastName"] . "</p>";
-                
+                echo '<img src="data:' . $row["ProfilePictureType"] . ';base64,' . base64_encode($row["ProfilePictureData"]) . '" alt="Profile Picture">';             
             } else {
                 echo "User not found.";
             }
@@ -73,9 +73,21 @@
                 <a href="home.php" class="btn btn-primary">Go back to Home</a>
 
                 <button class="btn btn-primary" onclick="toggleUpdateForm()">Update Account</button>
+
+                <button class="btn btn-primary" onclick="togglePFP()">Upload Picture</button>
                 
                 <form id="deleteForm" action="delete_account.php" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
                     <input type="submit" class="btn btn-danger" value="Delete Account">
+                </form>
+            </div>
+
+            <div id="updatePFP" style="display: none;">
+                <form action="updatepfp.php" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="updatePFP" class="form-label">Profile Picture:</label>
+                        <input type="file" class="form-control" name="updatePFP" value=""/>
+                        <button type="submit" class="btn btn-primary">Upload Picture</button>
+                    </div>
                 </form>
             </div>
 
@@ -124,6 +136,14 @@
 <script>
     function toggleUpdateForm() {
         var form = document.getElementById("updateForm");
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+    function togglePFP() {
+        var form = document.getElementById("updatePFP");
         if (form.style.display === "none" || form.style.display === "") {
             form.style.display = "block";
         } else {
