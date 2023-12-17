@@ -26,11 +26,11 @@
                 }
 
                 $stmt = $mysqli->prepare(
-                    "INSERT INTO user (Username, Email, Password, FirstName, LastName)
-                    VALUES (?, ?, ?, ?, ?)"
+                    "INSERT INTO user (Username, Email, Password, FirstName, LastName, PFPName, PFPNameOriginal, PFPSize, PFPType)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 );
 
-                $stmt->bind_param("sssss", $username, $email, $password, $firstName, $lastName,);
+                $stmt->bind_param("sssssssss", $username, $email, $password, $firstName, $lastName, $uniqueFileName, $fileName, $fileSize, $fileExtension);
 
                 $username = $_POST["username"];
                 $email = $_POST["email"];
@@ -39,6 +39,33 @@
                 $lastName = $_POST["lastName"];
 
                 $password = password_hash($password, PASSWORD_DEFAULT);
+                
+                // Code for profile picture upload starts
+                $file = $_FILES['uploadPFP'];
+                $fileName = $file['name'];
+                $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $fileSize = $file['size'];
+                $fileTmpName = $file['tmp_name'];
+
+                if (empty($fileName) || !exif_imagetype($fileTmpName)) {
+                echo "Invalid image file.";
+                exit;
+                }
+
+                if ($fileSize > 1024000) {
+                echo "File size exceeds maximum limit of 1MB.";
+                exit;
+                }
+
+                $targetDir = 'img/pfp/';
+                $uniqueFileName = uniqid() . '.' . $fileExtension;
+                $targetFile = $targetDir . $uniqueFileName;
+
+                if (!move_uploaded_file($fileTmpName, $targetFile)) {
+                echo "Error uploading file.";
+                exit;
+                }
+                // Code for profile picture upload ends
 
                 if ($stmt->execute()) {
                     echo "New account created successfully!";
@@ -53,7 +80,7 @@
             }
             ?>
 
-            <form action="register.php" method="post">
+            <form action="register.php" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="FirstName" class="text-secondary" style="font-weight: 500;">First name:</label>
                     <input id="firstName" name="firstName" required=""
@@ -71,6 +98,12 @@
                     <input id="username" name="username" required=""
                     type="text" class="form-control" placeholder="Enter your username" />
                     <small id="usernameHelp" class="form-text text-muted">Pick a username (You can change this later)</small>
+                </div>
+                <!-- Profile Picture Uploading Bit -->
+                <div class="mb-3">
+                    <label for="uploadPFP" class="text-secondary" style="font-weight: 500;">Profile Picture:</label>
+                    <input type="file" class="form-control" name="uploadPFP" value=""/>
+                    <small id="pfpHelp" class="form-text text-muted">Size must be less than 1 MB</small>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="text-secondary" style="font-weight: 500;">Email:</label>

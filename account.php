@@ -62,7 +62,7 @@
                 echo "<p>Email: " . $row["Email"] . "</p>";
                 echo "<p>First Name: " . $row["FirstName"] . "</p>";
                 echo "<p>Last Name: " . $row["LastName"] . "</p>";
-                echo '<img src="data:' . $row["ProfilePictureType"] . ';base64,' . base64_encode($row["ProfilePictureData"]) . '" alt="Profile Picture">';             
+                echo "<img class='border border-1' height='100' width='100' style='object-fit: cover;' src='img/pfp/" . $row["PFPName"] . "' alt='Image'>";    
             } else {
                 echo "User not found.";
             }
@@ -81,11 +81,11 @@
                 </form>
             </div>
 
-            <div id="updatePFP" style="display: none;">
-                <form action="updatepfp.php" method="POST" enctype="multipart/form-data">
+            <div id="uploadPFP" style="display: none;">
+                <form action="uploadpfp.php" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="updatePFP" class="form-label">Profile Picture:</label>
-                        <input type="file" class="form-control" name="updatePFP" value=""/>
+                        <label for="uploadPFP" class="form-label">Profile Picture:</label>
+                        <input type="file" class="form-control" name="uploadPFP" value=""/>
                         <button type="submit" class="btn btn-primary">Upload Picture</button>
                     </div>
                 </form>
@@ -143,7 +143,7 @@
         }
     }
     function togglePFP() {
-        var form = document.getElementById("updatePFP");
+        var form = document.getElementById("uploadPFP");
         if (form.style.display === "none" || form.style.display === "") {
             form.style.display = "block";
         } else {
