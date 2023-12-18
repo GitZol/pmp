@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
     <style>
         #updateForm {
             display: none;
@@ -22,132 +23,171 @@
             flex: 1;
             margin: 0 5px;
         }
+        .center {
+            position: absolute;
+            left:50%;
+            transform: translateX(-50%);
+            -webkit-transform: translateX(-50%);
+        }
     </style>
+
 </head>
 <body>
 <?php session_start(); include 'navbar.php'; ?>
-<div class="container">
-        <h2>User Account Details</h2>
-        <div class="card">
-            <?php
-            if (!isset($_SESSION["UserID"])) {
-                header("Location: login.php");
-                exit();
-            }
-            $hostname = "127.0.0.1";
-            $username = "root";
-            $password = "";
-            $db_name = "project_management_platform";
 
-            $mysqli = new mysqli($hostname, $username, $password, $db_name);
-            if ($mysqli->connect_error) {
-                die("Connection failed: " . $mysqli->connect_error);
-            }
+<div class="container d-flex flex-column align-items-center justify-content-center vh-100">
+    <h4>Account Details</h4>
+    <div class="card border-1 p-4" style="width: 22rem;">    
+        <?php
+        if (!isset($_SESSION["UserID"])) {
+            header("Location: login.php");
+            exit();
+        }
+        $hostname = "127.0.0.1";
+        $username = "root";
+        $password = "";
+        $db_name = "project_management_platform";
 
-            $userID = $_SESSION["UserID"]; 
-            $query = "SELECT * FROM user WHERE UserID = ?";
-            $stmt = $mysqli->prepare($query);
-            $stmt->bind_param("i", $userID);
-            $stmt->execute();
-            $result = $stmt->get_result();
+        $mysqli = new mysqli($hostname, $username, $password, $db_name);
+        if ($mysqli->connect_error) {
+            die("Connection failed: " . $mysqli->connect_error);
+        }
 
-            if (!$result) {
-                echo "Error: " . $mysqli->error;
-                exit();
-            }
+        $userID = $_SESSION["UserID"]; 
+        $query = "SELECT * FROM user WHERE UserID = ?";
+        $stmt = $mysqli->prepare($query);
+        $stmt->bind_param("i", $userID);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                echo "<p>Username: " . $row["Username"] . "</p>";
-                echo "<p>Email: " . $row["Email"] . "</p>";
-                echo "<p>First Name: " . $row["FirstName"] . "</p>";
-                echo "<p>Last Name: " . $row["LastName"] . "</p>";
-                echo "<img class='border border-1' height='100' width='100' style='object-fit: cover;' src='img/pfp/" . $row["PFPName"] . "' alt='Image'>";    
-            } else {
-                echo "User not found.";
-            }
+        if (!$result) {
+            echo "Error: " . $mysqli->error;
+            exit();
+        }
 
-            $mysqli->close();
-            ?>
-            <div class="btn-container">
-                <a href="home.php" class="btn btn-primary">Go back to Home</a>
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            echo "<img class='border border-1 rounded-circle center' height='100' width='100' style='object-fit: cover;' src='img/pfp/" . $row["PFPName"] . "' alt='Image'>";
+        } else {
+            echo "User not found.";
+        }
 
-                <button class="btn btn-primary" onclick="toggleUpdateForm()">Update Account</button>
+        $mysqli->close();
+        ?>
+        
+        <button onclick="togglePFP()" class="text-decoration-none btn btn-outline-secondary col-3 center" style="--bs-btn-padding-y: .12rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .80rem; margin-top: 110px;">Change
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-pencil" viewBox="-2 1 18 18">
+            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+        </svg>
+        </button>
+        
+        <hr class="hr hr-blurry" style="margin-top:50%;"/>
 
-                <button class="btn btn-primary" onclick="togglePFP()">Upload Picture</button>
-                
-                <form id="deleteForm" action="delete_account.php" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
-                    <input type="submit" class="btn btn-danger" value="Delete Account">
-                </form>
-            </div>
-
-            <div id="uploadPFP" style="display: none;">
-                <form action="uploadpfp.php" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="uploadPFP" class="form-label">Profile Picture:</label>
-                        <input type="file" class="form-control" name="uploadPFP" value=""/>
-                        <button type="submit" class="btn btn-primary">Upload Picture</button>
-                    </div>
-                </form>
-            </div>
-
-            <div id="updateForm" style="display: none;">
-                <form action="update_account.php" method="post">
-                    <div class="mb-3">
-                        <label for="updateUsername" class="form-label">Username:</label>
-                        <input type="text" class="form-control" id="updateUsername" name="updateUsername" value="<?php echo $row["Username"]; ?>" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="updateFirstName" class="form-label">First Name:</label>
-                        <input type="text" class="form-control" id="updateFirstName" name="updateFirstName" value="<?php echo $row["FirstName"]; ?>" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="updateLastName" class="form-label">Last Name:</label>
-                        <input type="text" class="form-control" id="updateLastName" name="updateLastName" value="<?php echo $row["LastName"]; ?>" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="updateEmail" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="updateEmail" name="updateEmail" value="<?php echo $row["Email"]; ?>" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="oldPassword" class="form-label">Old Password:</label>
-                        <input type="password" class="form-control" id="oldPassword" name="oldPassword">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="newPassword" class="form-label">New Password:</label>
-                        <input type="password" class="form-control" id="newPassword" name="newPassword">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirm Password:</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                    </div>
-
-                    <input type="submit" name="updateDetails" class="btn btn-primary" value="Update">
-                </form>
-            </div>
+        <div id="uploadPFP" style="display: none;">
+            <form action="uploadpfp.php" method="POST" enctype="multipart/form-data">
+                <div class="d-flex flex-column align-items-center justify-content-center">
+                    <input type="file" class="form-control" name="uploadPFP" value=""/>
+                    <button type="submit" class="text-decoration-none btn btn-outline-primary col-3" style="--bs-btn-padding-y: .12rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .75rem; margin-top: 10px;">Upload
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-floppy2-fill" viewBox="-4 0 20 20">
+                    <path d="M12 2h-2v3h2z"/>
+                    <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5V2.914a1.5 1.5 0 0 0-.44-1.06L14.147.439A1.5 1.5 0 0 0 13.086 0zM4 6a1 1 0 0 1-1-1V1h10v4a1 1 0 0 1-1 1zM3 9h10a1 1 0 0 1 1 1v5H2v-5a1 1 0 0 1 1-1"/>
+                    </svg>
+                    </button>
+                </div>
+            </form>
         </div>
+
+        <hr class="hr hr-blurry" style="display: none;" id="pfpFormBar"/>
+
+        <form action="update_account.php" method="post">
+            <div class="mb-3">
+                <label for="firstName" class="text-secondary" style="font-weight: 500;">First name:</label>
+                <input id="firstName" name="firstName" type="text" class="form-control" value="<?php echo $row["FirstName"]; ?>" disabled="disabled"/>
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="text-secondary" style="font-weight: 500;">Last name:</label>
+                <input id="lastName" name="lastName" type="text" class="form-control" value="<?php echo $row["LastName"]; ?>" disabled="disabled"/>
+            </div>
+            <div class="mb-3">
+                <label for="username" class="text-secondary" style="font-weight: 500;">Username:</label>
+                <input id="username" name="username" type="text" class="form-control" value="<?php echo $row["Username"]; ?>" disabled="disabled"/>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="text-secondary" style="font-weight: 500;">Email:</label>
+                <input id="email" name="email" type="text" class="form-control" value="<?php echo $row["Email"]; ?>" disabled="disabled"/>
+            </div>
+
+            <div id="passwordForm" style="display: none;">
+                <div class="mb-3">
+                    <label for="oldPassword" class="text-secondary" style="font-weight: 500;">Old Password:</label>
+                    <input type="password" class="form-control" id="oldPassword" name="oldPassword">
+                </div>
+
+                <div class="mb-3">
+                    <label for="newPassword" class="text-secondary" style="font-weight: 500;">New Password:</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword">
+                </div>
+
+                <div class="mb-3">
+                    <label for="confirmPassword" class="text-secondary" style="font-weight: 500;">Confirm Password:</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                </div>
+                <div class="d-flex flex-column align-items-center justify-content-center">
+                    <button type="submit" name="UpdateDetails" class="text-decoration-none btn btn-outline-primary col-3" style="--bs-btn-padding-y: .12rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .75rem; margin-bottom: 20px;">Save
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-floppy2-fill" viewBox="-4 0 20 20">
+                    <path d="M12 2h-2v3h2z"/>
+                    <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5V2.914a1.5 1.5 0 0 0-.44-1.06L14.147.439A1.5 1.5 0 0 0 13.086 0zM4 6a1 1 0 0 1-1-1V1h10v4a1 1 0 0 1-1 1zM3 9h10a1 1 0 0 1 1 1v5H2v-5a1 1 0 0 1 1-1"/>
+                    </svg>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <button onclick="toggleForm()" class="text-decoration-none btn btn-outline-secondary col-3" style="--bs-btn-padding-y: .12rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .80rem;">Update
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-pencil" viewBox="-2 1 18 18">
+                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+            </svg>
+            </button>
+        </div>
+        <hr class="hr hr-blurry"/>
+         
+        <form class="d-flex flex-column align-items-center justify-content-center" id="deleteForm" action="delete_account.php" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+            <button type="submit" class="text-decoration-none btn btn btn-outline-danger col-5" style="--bs-btn-padding-y: .12rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .80rem;">Delete Account
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-trash-fill" viewBox="0 1 18 18">
+                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+            </svg>
+            </button>
+        </form>
+
     </div>
+</div>
+
 <script>
-    function toggleUpdateForm() {
-        var form = document.getElementById("updateForm");
+    function toggleForm() {
+        var form = document.getElementById("passwordForm");
         if (form.style.display === "none" || form.style.display === "") {
             form.style.display = "block";
+            document.getElementById("firstName").disabled = false;
+            document.getElementById("lastName").disabled = false;
+            document.getElementById("username").disabled = false;
+            document.getElementById("email").disabled = false;
         } else {
             form.style.display = "none";
+            document.getElementById("firstName").disabled = true;
+            document.getElementById("lastName").disabled = true;
+            document.getElementById("username").disabled = true;
+            document.getElementById("email").disabled = true;
         }
     }
     function togglePFP() {
         var form = document.getElementById("uploadPFP");
-        if (form.style.display === "none" || form.style.display === "") {
+        var bar = document.getElementById("pfpFormBar");
+        if ((form.style.display === "none" || form.style.display === "") && (bar.style.display === "none" || bar.style.display === "")) {
             form.style.display = "block";
+            bar.style.display = "block";
         } else {
             form.style.display = "none";
+            bar.style.display = "none";
         }
     }
 </script>
