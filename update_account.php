@@ -34,14 +34,14 @@ $row = $result->fetch_assoc();
 $updateQuery = "UPDATE user SET ";
 $updateParams = array();
 
-if (!empty($_POST['updateUsername'])) {
-    $newUsername = $_POST['updateUsername'];
+if (!empty($_POST['username'])) {
+    $newUsername = $_POST['username'];
     $updateQuery .= "Username = ?";
     $updateParams[] = $newUsername;
 }
 
-if (!empty($_POST['updateFirstName'])) {
-    $newFirstName = $_POST['updateFirstName'];
+if (!empty($_POST['firstName'])) {
+    $newFirstName = $_POST['firstName'];
     if (!empty($updateParams)) {
         $updateQuery .= ", ";
     }
@@ -49,8 +49,8 @@ if (!empty($_POST['updateFirstName'])) {
     $updateParams[] = $newFirstName;
 }
 
-if (!empty($_POST['updateLastName'])) {
-    $newLastName = $_POST['updateLastName'];
+if (!empty($_POST['lastName'])) {
+    $newLastName = $_POST['lastName'];
     if (!empty($updateParams)) {
         $updateQuery .= ", ";
     }
@@ -58,8 +58,8 @@ if (!empty($_POST['updateLastName'])) {
     $updateParams[] = $newLastName;
 }
 
-if (!empty($_POST['updateEmail'])) {
-    $newEmail = $_POST['updateEmail'];
+if (!empty($_POST['email'])) {
+    $newEmail = $_POST['email'];
     if (!empty($updateParams)) {
         $updateQuery .= ", ";
     }

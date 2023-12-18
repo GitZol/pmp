@@ -1,14 +1,20 @@
+<?php
+session_start();
+$loggedIn = isset($_SESSION["UserID"]);
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Management Platform</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container d-flex flex-column align-items-center justify-content-center vh-100">
+    <div class="container d-flex flex-column align-items-center justify-content-center vh-100" >
         <div class="position-fixed top-0 start-0">
             <h2 class="display-4 text-primary">Project Management Platform</h2>
         </div>
@@ -20,11 +26,19 @@
         </p>
 
         <div class="mt-3">
-            <a href="login.php" class="btn btn-primary btn-lg">Login</a>
-            <a href="register.php" class="btn btn-outline-primary btn-lg ms-3">Sign Up</a>
-        </div>
+        <?php
+            if ($loggedIn) {
+                echo '
+                <a href="home.php" class="btn btn-primary btn-lg">Get Started!</a> 
+                ';
+            } else {
+                echo '
+                <a href="login.php" class="btn btn-primary btn-lg">Login</a>
+                <a href="register.php" class="btn btn-outline-primary btn-lg ms-3">Sign Up</a>
+                ';
+            }
+        ?>
+        </div> 
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0sG5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>
