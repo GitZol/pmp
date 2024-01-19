@@ -139,3 +139,19 @@
 #updateForm {
     display: none;
 }
+
+#filesContainer {
+    max-height: 400px;
+    min-height: 400px;
+    overflow-y: auto;
+}
+
+#filesContainer div {
+    margin-bottom: 10px;
+}
+
+.delete-icon {
+    cursor: pointer;
+    color: #ff0000; /* Red color for the delete icon */
+    margin-left: 10px; /* Adjust the spacing between the View File link and the delete icon */
+}

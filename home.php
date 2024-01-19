@@ -51,6 +51,10 @@ if (!isset($_SESSION["UserID"])){
                     </div>
                     <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
                         <h3>Files</h3>
+                        <div>
+                            <input type="file" id="fileInput" class="form-control mb-2" accept="*" multiple>
+                            <button id="uploadFilesBtn" class="btn btn-primary mb-2">Upload Files</button>
+                        </div>
                         <div id="filesContainer"></div>
                     </div>
                 </div>
