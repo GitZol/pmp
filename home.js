@@ -254,6 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
         editInput.value = content;
 
         var saveButton = document.createElement('button');
+        saveButton.classList.add('btn', 'btn-primary', 'me-2');
         saveButton.textContent = 'Save';
         saveButton.disabled = true;
 
@@ -270,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         var cancelButton =document.createElement('button');
+        cancelButton.classList.add('btn', 'btn-secondary');
         cancelButton.textContent = 'Cancel';
         cancelButton.addEventListener('click', function(event) {
             event.stopPropagation();
