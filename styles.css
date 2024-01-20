@@ -155,3 +155,16 @@
     color: #ff0000; /* Red color for the delete icon */
     margin-left: 10px; /* Adjust the spacing between the View File link and the delete icon */
 }
+
+.search-results-box {
+    background-color: var(--bs-dark);
+    border: 1px solid #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.card {
+    margin-bottom: 10px;
+}

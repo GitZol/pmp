@@ -9,7 +9,7 @@
 </style>
 
 
-<?php include 'navbar.php'; ?>
+
 <div class="container">
 <?php
 if (isset($_SESSION["Username"])) {

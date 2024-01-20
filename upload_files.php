@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["taskID"])) {
         $fileName = basename($_FILES['files']['name'][$key]);
         $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
         $uniqueFileName = $fileName . '_' . uniqid() . '.' . $fileExtension;
-        $targetFilePath = $uploadDirectory . $uniqueFileName; 
+        $targetFilePath = $uploadDirectory . $uniqueFileName;
 
         //Move file to specified dir
         if (move_uploaded_file($_FILES['files']['tmp_name'][$key], $targetFilePath)) {
