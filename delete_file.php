@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["fileID"])) {
             $filePath = __DIR__ . '/uploads/' . $fileName;
 
             if (file_exists($filePath)) {
+                error_log("File exists at: $filePath");
                 if (unlink($filePath)) {
                     $stmtDelete = $mysqli->prepare("DELETE FROM file WHERE FileID = ?");
                     $stmtDelete->bind_param("i", $fileID);
@@ -48,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["fileID"])) {
                     echo json_encode(["success" => false, "message" => "Error deleting file: Unable to remove file from server"]);
                 }
             } else {
+                error_log("File not found at: $filePath");
                 echo json_encode(["success" => false, "message" => "Error deleting file: File not found on server"]);
             }
         } else {

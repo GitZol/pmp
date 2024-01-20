@@ -41,15 +41,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["taskID"])) {
     }
 
     foreach ($_FILES['files']['name'] as $key => $value) {
+        
         $fileName = basename($_FILES['files']['name'][$key]);
-        $targetFilePath = $uploadDirectory . $fileName;
+        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $uniqueFileName = $fileName . '_' . uniqid() . '.' . $fileExtension;
+        $targetFilePath = $uploadDirectory . $uniqueFileName;
 
         //Move file to specified dir
         if (move_uploaded_file($_FILES['files']['tmp_name'][$key], $targetFilePath)) {
-            $uploadedFiles[] = $fileName;
+            $uploadedFiles[] = $uniqueFileName;
+            $fileID = $mysqli->insert_id;
 
             $stmt = $mysqli->prepare("INSERT INTO file (FileName, FileType, UploadDate, UserID, TaskID, ProjectID) VALUES (?, ?, NOW(), ?, ?, ?)");
-            $stmt->bind_param("ssiii", $fileName, $_FILES['files']['type'][$key], $_SESSION["UserID"], $taskID, $projectID);            
+            $stmt->bind_param("ssiii", $uniqueFileName, $_FILES['files']['type'][$key], $_SESSION["UserID"], $taskID, $projectID);            
 
             $stmt->execute();
             $stmt->close();

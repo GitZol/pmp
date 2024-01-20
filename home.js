@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             if (data.success) {
-                console.log('Files uploaded successfully');
+                fetchFiles(currentTaskID);
             } else {
                 console.error('Error uploading files:', data.message);
             }
@@ -237,36 +237,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    async function deleteFile(fileID) {
+    function deleteFile(fileID) {
         const confirmation = confirm("Are you sure you want to delete this file?");
     
         if (confirmation) {
-            try {
-                const formData = new FormData();
-                formData.append('fileID', fileID);
+            const formData = new FormData();
+            formData.append('fileID', fileID);
     
-                const response = await fetch('delete_file.php', {
-                    method: 'POST',
-                    body: formData
-                });
-    
+            fetch('delete_file.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-    
-                const data = await response.json();
-    
+                return response.json();
+            })
+            .then(data => {
                 if (data.success) {
                     console.log(data.message);
-                    // Wait for a short period to ensure the file is deleted on the server
-                    await new Promise(resolve => setTimeout(resolve, 500));
                     fetchFiles(currentTaskID);
                 } else {
-                    console.error('Error deleting file:', data.message);
+                    alert('Error deleting file: ' + data.message);
                 }
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('There was a problem with the delete operation:', error);
-            }
+            });
         }
     }
 
