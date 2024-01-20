@@ -167,6 +167,13 @@ if (!isset($_SESSION["UserID"])){
         searchResultsContainer.style.left = searchInputRect.left + 'px';
         searchResultsContainer.style.top = (searchInputRect.bottom + window.scrollY) + 'px';
         searchResultsContainer.style.width = searchInputRect.width + 'px';
+
+        document.addEventListener('click', function(event) {
+            const searchResultsContainer =document.getElementById('searchResults');
+            if (!searchResultsContainer.contains(event.target)) {
+                searchResultsContainer.innerHTML = '';
+            }
+        });
     }
 </script>
 </body>
