@@ -35,7 +35,7 @@ if (!isset($_SESSION["UserID"])){
                         <button class="nav-link active" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="true">Comments</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="files-tab" data-bs-toggle="tab" data-bs-target="#files" type="button" role="tab" aria-controls="files" aria-selected="true">Files</button>
+                        <button class="nav-link" id="files-tab" data-bs-toggle="tab" data-bs-target="#files" type="button" role="tab" aria-controls="files" aria-selected="false">Files</button>
                     </li>
                 </ul>
 
@@ -51,6 +51,10 @@ if (!isset($_SESSION["UserID"])){
                     </div>
                     <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
                         <h3>Files</h3>
+                        <div>
+                            <input type="file" id="fileInput" class="form-control mb-2" accept="*" multiple>
+                            <button id="uploadFilesBtn" class="btn btn-primary mb-2">Upload Files</button>
+                        </div>
                         <div id="filesContainer"></div>
                     </div>
                 </div>

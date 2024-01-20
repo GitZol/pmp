@@ -33,13 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#comments').classList.add('show', 'active');
     });
 
-    document.getElementById('files-tab').addEventListener('click', function(event) {
-        var tabContent = document.querySelector('#myTabContent');
-        tabContent.querySelector('.tab-pane.show.active').classList.remove('show', 'active');
-        document.querySelector('#files').classList.add('show', 'active');
-    });
-
-
     function fetchComments(currentTaskID) {
         fetch('fetch_comments.php?taskID=' + currentTaskID)
             .then(response => {
@@ -167,6 +160,142 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    function uploadFiles(currentTaskID, files) {
+        const formData = new FormData();
+        formData.append('taskID', currentTaskID)
+
+        for (const file of files) {
+            formData.append('files[]', file);
+        }
+    
+        fetch('upload_files.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                fetchFiles(currentTaskID);
+            } else {
+                console.error('Error uploading files:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    function fetchFiles(taskID) {
+        const formData = new FormData();
+        formData.append('taskID', taskID);
+    
+        fetch('fetch_files.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const filesContainer = document.getElementById('filesContainer');
+                filesContainer.innerHTML = '';
+    
+                data.files.forEach(file => {
+                    const fileElement = document.createElement('div');
+                    fileElement.innerHTML = `
+                    <p>File Name: ${file.FileName}</p>
+                    <p>File Type: ${file.FileType}</p>
+                    <p>upload Date: ${file.UploadDate}<p>
+                    <a href="${file.FileURL}" target="_blank" rel="noopener noreferrer">View File</a>
+                    <span class="delete-icon" data-file-id="${file.FileID}" title="Delete File">&#128465;</span>
+                    <hr>
+                    `;
+                    filesContainer.appendChild(fileElement);
+                });
+    
+                filesContainer.querySelectorAll('.delete-icon').forEach(deleteIcon => {
+                    deleteIcon.addEventListener('click', function (event) {
+                        const fileID = event.target.dataset.fileId;
+                        deleteFile(fileID);
+                    });
+                });
+            } else {
+                console.error('Error fetching files:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    function deleteFile(fileID) {
+        const confirmation = confirm("Are you sure you want to delete this file?");
+    
+        if (confirmation) {
+            const formData = new FormData();
+            formData.append('fileID', fileID);
+    
+            fetch('delete_file.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    fetchFiles(currentTaskID);
+                } else {
+                    alert('Error deleting file: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the delete operation:', error);
+            });
+        }
+    }
+
+
+    document.getElementById('files-tab').addEventListener('click', function(event) {
+        var tabContent = document.querySelector('#myTabContent');
+        var activePane = tabContent.querySelector('.tab-pane.show.active');
+
+        if (activePane) {
+            activePane.classList.remove('show', 'active');
+        }
+
+        var filesElement = document.querySelector('#files');
+        if (filesElement) {
+            filesElement.classList.add('show', 'active');
+        }
+
+        fetchFiles(currentTaskID);
+    });
+
+    document.getElementById('uploadFilesBtn').addEventListener('click', function() {
+        var fileInput = document.getElementById('fileInput');
+        var files = fileInput.files;
+
+        if (currentTaskID && files && files.length > 0) {
+            uploadFiles(currentTaskID, files);
+        } else {
+            alert('Please select a task and choose one or more files to upload.');
+        }
+    });
+
     document.getElementById('addCommentBtn').addEventListener('click', function() {
         var commentContent = document.getElementById('newComment').value.trim();
 
@@ -254,6 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
         editInput.value = content;
 
         var saveButton = document.createElement('button');
+        saveButton.classList.add('btn', 'btn-primary', 'me-2');
         saveButton.textContent = 'Save';
         saveButton.disabled = true;
 
@@ -270,6 +400,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         var cancelButton =document.createElement('button');
+        cancelButton.classList.add('btn', 'btn-secondary');
         cancelButton.textContent = 'Cancel';
         cancelButton.addEventListener('click', function(event) {
             event.stopPropagation();

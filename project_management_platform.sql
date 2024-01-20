@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2023 at 06:10 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jan 20, 2024 at 05:18 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,6 +35,13 @@ CREATE TABLE `comment` (
   `TaskID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
+--
+-- Dumping data for table `comment`
+--
+
+INSERT INTO `comment` (`CommentID`, `Content`, `Timestamp`, `UserID`, `TaskID`) VALUES
+(36, 'hi', '2024-01-19 15:28:21', 19, 41);
+
 -- --------------------------------------------------------
 
 --
@@ -46,6 +53,7 @@ CREATE TABLE `file` (
   `FileName` varchar(255) NOT NULL,
   `FileType` varchar(255) DEFAULT NULL,
   `UploadDate` date NOT NULL,
+  `FileURL` varchar(255) NOT NULL,
   `UserID` int(11) NOT NULL,
   `TaskID` int(11) NOT NULL,
   `ProjectID` int(11) NOT NULL
@@ -66,6 +74,14 @@ CREATE TABLE `project` (
   `UserID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
+--
+-- Dumping data for table `project`
+--
+
+INSERT INTO `project` (`ProjectID`, `ProjectName`, `Description`, `StartDate`, `EndDate`, `UserID`) VALUES
+(32, 'test', 'test', '2023-12-18', '2023-12-18', 18),
+(33, 'Project1', 'testing project1', '2024-01-19', '2024-01-19', 19);
+
 -- --------------------------------------------------------
 
 --
@@ -82,6 +98,14 @@ CREATE TABLE `task` (
   `UserID` int(11) NOT NULL,
   `ProjectID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `task`
+--
+
+INSERT INTO `task` (`TaskID`, `TaskName`, `Description`, `DueDate`, `Priority`, `Status`, `UserID`, `ProjectID`) VALUES
+(40, 'test1', 'test1', '2023-12-18', 'low', 'not started', 18, 32),
+(41, 'task1', 'testing task1', '2024-01-19', 'medium', 'started', 19, 33);
 
 -- --------------------------------------------------------
 
@@ -102,6 +126,14 @@ CREATE TABLE `user` (
   `PFPSize` varchar(255) NOT NULL,
   `PFPType` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`UserID`, `Username`, `Email`, `Password`, `FirstName`, `LastName`, `Role`, `PFPName`, `PFPNameOriginal`, `PFPSize`, `PFPType`) VALUES
+(18, 'motest', 'mo@mo.com', '$2y$10$LYE9tBOl8mzkCfWVgBCLru0c0T1aGG8VhYv/lPbvTIx8H9ZbJbHUm', 'mo', 'test1', NULL, '658076d0430e2.png', 'IMG-20230417-WA0000.png', '597101', 'png'),
+(19, 'mo', 'mo@mo.com', '$2y$10$Reeao54ZstMim5Jq6ngcw.H37unL5v4M5wgbQVz6NCm4LrKO283GG', 'mo', 'mo', NULL, '65aa8afad670a.png', '658076d0430e2.png', '597101', 'png');
 
 -- --------------------------------------------------------
 
@@ -195,31 +227,31 @@ ALTER TABLE `user_project_role`
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `CommentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `CommentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `file`
 --
 ALTER TABLE `file`
-  MODIFY `FileID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `FileID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
-  MODIFY `ProjectID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `ProjectID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `user_project`
