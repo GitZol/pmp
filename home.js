@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="file-actions">
                         <a href="${file.FileURL}" target="_blank" rel="noopener noreferrer" class="btn btn-primary"><i class="fas fa-eye"></i> View File</a>
                         <a href="#" class="btn btn-success download-link" data-file-url="${file.FileURL}" download="${file.FileName}"><i class="fas fa-download"></i> Download File</a>
-                        <span class="delete-icon" data-file-id="${file.FileID}" title="Delete File"><i class="fas fa-trash-alt"></i></span>
+                        <span class="delete-icon" data-file-id="${file.FileID}" title="Delete File">&#128465;</span>
                     </div>
                     <hr>
                     `;
