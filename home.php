@@ -4,6 +4,7 @@ if (!isset($_SESSION["UserID"])){
     header("Location: login.php");
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -21,8 +22,9 @@ if (!isset($_SESSION["UserID"])){
 </head>
 
 <body>
-    <!-- The navbar for this page is in fetch_projects.php -->
     <?php include 'navbar.php'; ?>
+    <div id="messageContainer" class="mt-3"></div>
+
     <div class="container mt-4">
         
         <form method="post" action="#" id="searchForm" class="mb-3">
@@ -105,12 +107,69 @@ if (!isset($_SESSION["UserID"])){
             </div>
         </div>
     </div>
+    <div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inviteModalLabel">Select Project to Invite</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="projectSelect">Select Project:</label>
+                    <select id="projectSelect" class="form-select">
+                        <?php
+                        if (!empty($projects)) {
+                            foreach ($projects as $project) {
+                                echo "<option value='{$project["ProjectID"]}'>{$project["ProjectName"]}</option>";
+                            }
+                        } else {
+                            echo "<option disabled>No projects found</option>";
+                        }
+                        ?>
+
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="sendInvitation()">Send Invitation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="invitationsModal" tabindex="-1" aria-labelledby="invitationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="invitationsModalLabel">Invitations</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?php
+                    include 'invitations.php';
+                    foreach ($invitations as $invitation) {
+                        echo "<p>Sender: {$invitation['SenderUserName']}</p>
+                        <p>Project: {$invitation['ProjectName']}</p>";
+
+                        echo "<form id='invitationForm' action='handle_invitation.php' method='post'>
+                        <input type='hidden' name='invitation_id' value='{$invitation['InvitationID']}'>
+                               <button type='button' name='accept' class='btn btn-success' onclick='handleInvitation(`accept`)'>Accept</button>
+                               <button type='button' name='decline' class='btn btn-danger' onclick='handleInvitation(`decline`)'>Decline</button>
+                            </form> 
+                        <hr>";
+                    }
+                    ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault(); 
         const searchTerm = document.querySelector('input[name="searchTerm"]').value;
 
-        // Make an AJAX request to search_users.php
         fetch('search_users.php', {
             method: 'POST',
             headers: {
@@ -129,15 +188,20 @@ if (!isset($_SESSION["UserID"])){
         });
     });
 
+    let selectedUserId;
+
+    function setSelectedUser(userId) {
+        selectedUserId =userId;
+    }
+
     function displaySearchResults(results) {
         const searchInput = document.querySelector('input[name="searchTerm"]');
-        const searchResultsContainer = document.getElementById('searchResults'); // Add an ID to the container
+        const searchResultsContainer = document.getElementById('searchResults'); 
 
         if (results.error) {
             searchResultsContainer.innerHTML = `<p class="text-danger">Error: ${results.error}</p>`;
         } else {
-            searchResultsContainer.innerHTML = ''; // Clear previous results
-
+            searchResultsContainer.innerHTML = ''; 
             if (results.length > 0) {
                 const resultsBox = document.createElement('div');
                 resultsBox.className = 'search-results-box';
@@ -149,10 +213,18 @@ if (!isset($_SESSION["UserID"])){
                         <div class="card-body">
                             <p class="card-text">Username: ${user.Username}</p>
                             <p class="card-text">Email: ${user.Email}</p>
-                            <button class="btn btn-success invite-btn" data-user-id="${user.UserID}" onclick="inviteUser(${user.UserID})">Invite</button>
+                            <button class="btn btn-success invite-btn" data-bs-toggle="modal" data-bs-target="#inviteModal" data-user-id="${user.UserID}" onclick="setSelectedUser(${user.UserID})">Invite</button>
                         </div>
                     `;
                     resultsBox.appendChild(card);
+
+                    
+                });
+
+                document.querySelectorAll('.invite-btn').forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        selectedUserId = this.getAttribute('data-user-id');
+                    });
                 });
 
                 searchResultsContainer.appendChild(resultsBox);
@@ -161,7 +233,6 @@ if (!isset($_SESSION["UserID"])){
             }
         }
 
-        // Position the search results below the search bar
         const searchInputRect = searchInput.getBoundingClientRect();
         searchResultsContainer.style.position = 'absolute';
         searchResultsContainer.style.left = searchInputRect.left + 'px';
@@ -175,6 +246,55 @@ if (!isset($_SESSION["UserID"])){
             }
         });
     }
+
+    function sendInvitation() {
+        const projectSelect =document.getElementById('projectSelect');
+        const selectedProjectID =projectSelect.value;
+
+        if (selectedUserId) {
+            fetch('invite_user.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    receiverUserID: selectedUserId,
+                    projectID: selectedProjectID
+                }),
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        } else {
+            console.error('No user selected');
+        }
+    }
+
+    function handleInvitation(action) {
+        const form =document.getElementById('invitationForm');
+        const formData = new FormData(form);
+        formData.append(action, '');
+
+        fetch('handle_invitation.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(result => {
+            console.log(result);
+            const modal = new bootstrap.Modal(document.getElementById('invitationsModal'));
+            modal.hide();
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
 </script>
 </body>
 </html>

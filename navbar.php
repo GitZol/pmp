@@ -41,6 +41,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="home.php">Dashboard</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#invitationsModal">Invitations</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                             '. $row["Username"] .'

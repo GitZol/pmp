@@ -8,6 +8,7 @@ if (!isset($_SESSION["Username"] )) {
 
 if (isset($_POST["projectID"])) {
     $projectID = $_POST["projectID"];
+    $userID = $_SESSION["UserID"];
 
     $hostname = "127.0.0.1";
     $username = "root";
@@ -20,20 +21,34 @@ if (isset($_POST["projectID"])) {
         die("Connection failed: " . $mysqli->connect_error);
     }
 
-    $delete_query = $mysqli->prepare("DELETE FROM project WHERE projectID = ?");
-    $delete_query->bind_param("i", $projectID);
+    $checkPermissionStmt = $mysqli->prepare("SELECT UserID FROM project WHERE ProjectID = ? AND UserID = ?");
+    $checkPermissionStmt->bind_param("ii", $projectID, $userID);
+    $checkPermissionStmt->execute();
+    $checkPermissionResult = $checkPermissionStmt->get_result();
 
-    if( $delete_query->execute() ) {
-        header("Location: home.php");
-        exit();
+    if ($checkPermissionResult->num_rows > 0) {
+
+        $delete_query = $mysqli->prepare("DELETE FROM project WHERE projectID = ?");
+        $delete_query->bind_param("i", $projectID);
+    
+        if( $delete_query->execute()) {
+            header("HTTP/1.1 200 OK");
+            exit();
+        } else {
+            header("HTTP/1.1 500 Internal Server Error");
+            echo "Error: Unable to delete this project.";
+        }
+    
+        $delete_query->close();
     } else {
-        echo "Error: Unable to delete this project.";
+        header("HTTP/1.1 403 Forbidden");
+        echo "You do not have permission to delete this project.";
     }
-
-    $delete_query->close();
+    $checkPermissionResult->close();
     $mysqli->close();
 } else {
-    header("Location: home.php");
+    header("HTTP/1.1 400 Bad Request");
+    echo "Bad request.";
     exit();
 }
 ?>

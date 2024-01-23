@@ -24,6 +24,7 @@
 .comment-box {
     border: 1px solid #ccc;
     margin-bottom: 10px;
+    margin-top: 10px;
     padding: 10px;
 }
 
@@ -167,4 +168,8 @@
 
 .card {
     margin-bottom: 10px;
+}
+
+.input-group .btn {
+    z-index: 0;
 }

@@ -29,8 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('comments-tab').addEventListener('click', function(event) {
         var tabContent = document.querySelector('#myTabContent');
-        tabContent.querySelector('.tab-pane.show.active').classList.remove('show', 'active');
-        document.querySelector('#comments').classList.add('show', 'active');
+        var activeTabPane = tabContent.querySelector('.tab-pane.show.active');
+
+        if (activeTabPane) {
+            activeTabPane.classList.remove('show', 'active');
+        }
+
+        var commentsElement = document.querySelector('#comments');
+        if (commentsElement) {
+            commentsElement.classList.add('show', 'active');
+        }
     });
 
     function fetchComments(currentTaskID) {
@@ -212,11 +220,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.files.forEach(file => {
                     const fileElement = document.createElement('div');
                     fileElement.innerHTML = `
-                    <p>File Name: ${file.FileName}</p>
-                    <p>File Type: ${file.FileType}</p>
-                    <p>upload Date: ${file.UploadDate}<p>
-                    <a href="${file.FileURL}" target="_blank" rel="noopener noreferrer">View File</a>
-                    <span class="delete-icon" data-file-id="${file.FileID}" title="Delete File">&#128465;</span>
+                    <div class="file-info">
+                        <p>File Name: ${file.FileName}</p>
+                        <p>File Type: ${getFileType(file.FileType)}</p>
+                        <p>Upload Date: ${file.UploadDate}</p>
+                    </div>
+                    <div class="file-actions">
+                        <a href="${file.FileURL}" target="_blank" rel="noopener noreferrer" class="btn btn-primary"><i class="fas fa-eye"></i> View File</a>
+                        <a href="#" class="btn btn-success download-link" data-file-url="${file.FileURL}" download="${file.FileName}"><i class="fas fa-download"></i> Download File</a>
+                        <span class="delete-icon" data-file-id="${file.FileID}" title="Delete File"><i class="fas fa-trash-alt"></i></span>
+                    </div>
                     <hr>
                     `;
                     filesContainer.appendChild(fileElement);
@@ -228,6 +241,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         deleteFile(fileID);
                     });
                 });
+
+                filesContainer.querySelectorAll('.download-link').forEach(downloadLink => {
+                    downloadLink.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const fileURL = event.target.dataset.fileUrl;
+                        downloadFile(fileURL);
+                    });
+                });
             } else {
                 console.error('Error fetching files:', data.message);
             }
@@ -235,6 +256,26 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
+    }
+
+    function getFileType(fileType) {
+        const fileTypesMap = {
+            'application/pdf': 'PDF',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'Word',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'Excel',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'PowerPoint',
+            
+        };
+        return fileTypesMap[fileType] || fileType;
+    }
+
+    function downloadFile(fileURL) {
+        const link = document.createElement('a');
+        link.href = fileURL;
+        link.download = '';
+        link.target = '_blank';
+        link.click();
+        link.remove();
     }
 
     function deleteFile(fileID) {
@@ -505,4 +546,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return Math.floor(seconds) + " seconds ago";
     }
 
+    
+    
 });
