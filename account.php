@@ -73,6 +73,8 @@
         }
 
         $mysqli->close();
+        
+
         ?>
         
         <button onclick="togglePFP()" class="text-decoration-none btn btn-outline-secondary col-3 center" style="--bs-btn-padding-y: .12rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .80rem; margin-top: 110px;">Change
@@ -83,19 +85,31 @@
         
         <hr class="hr hr-blurry" style="margin-top:50%;"/>
 
-        <div id="uploadPFP" style="display: none;">
-            <form action="uploadpfp.php" method="POST" enctype="multipart/form-data">
-                <div class="d-flex flex-column align-items-center justify-content-center">
-                    <input type="file" class="form-control" name="uploadPFP" value=""/>
-                    <button type="submit" class="text-decoration-none btn btn-outline-primary col-3" style="--bs-btn-padding-y: .12rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .75rem; margin-top: 10px;">Upload
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-floppy2-fill" viewBox="-4 0 20 20">
+<div id="uploadPFP" style="display: none;">
+    <form action="uploadpfp.php" method="POST" enctype="multipart/form-data" class="mb-2">
+        <div class="mb-2">
+            <input type="file" class="form-control" name="uploadPFP">
+        </div>
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-outline-primary flex-grow-1 me-1">
+                Upload
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-floppy2-fill" viewBox="-4 0 20 20">
                     <path d="M12 2h-2v3h2z"/>
                     <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5V2.914a1.5 1.5 0 0 0-.44-1.06L14.147.439A1.5 1.5 0 0 0 13.086 0zM4 6a1 1 0 0 1-1-1V1h10v4a1 1 0 0 1-1 1zM3 9h10a1 1 0 0 1 1 1v5H2v-5a1 1 0 0 1 1-1"/>
-                    </svg>
-                    </button>
-                </div>
-            </form>
+                </svg>
+            </button>
+            <button type="button" class="btn btn-outline-danger flex-grow-1 me-1" onclick="location.href='defaultpfp.php'">
+                Remove Picture
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-floppy2-fill" viewBox="-4 0 20 20">
+                    <path d="M12 2h-2v3h2z"/>
+                    <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5V2.914a1.5 1.5 0 0 0-.44-1.06L14.147.439A1.5 1.5 0 0 0 13.086 0zM4 6a1 1 0 0 1-1-1V1h10v4a1 1 0 0 1-1 1zM3 9h10a1 1 0 0 1 1 1v5H2v-5a1 1 0 0 1 1-1"/>
+                </svg>
+            </button>
         </div>
+    </form>
+</div>
+
+
 
         <hr class="hr hr-blurry" style="display: none;" id="pfpFormBar"/>
 
@@ -158,6 +172,20 @@
             </svg>
             </button>
         </form>
+        <?php
+    if (isset($_GET['message']) && $_GET['message'] == 'no_changes') {
+        echo '<div class="alert alert-danger alert-dismissible fade show text-center mt-3" role="alert">
+                No changes made
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>';
+    }
+    if((isset($_GET['message']) && $_GET['message'] == 'update_successful')){
+        echo '<div class="alert alert-success alert-dismissible fade show text-center mt-3" role="alert">
+                Account Updated Successfully
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>';
+    }
+?>
 
     </div>
 </div>

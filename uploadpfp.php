@@ -67,7 +67,7 @@ $loggedIn = isset($_SESSION["UserID"]);
 if (file_exists($targetFile)) {
   echo "File uploaded successfully.";
   if ($loggedIn) {
-    header("Location: account.php");
+    header("Location: account.php?message=update_successful");
     exit();
   }
 } else {
