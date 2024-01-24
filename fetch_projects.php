@@ -1,6 +1,7 @@
 <style>
     #task-details {
         list-style-type: none;
+        margin-bottom: 10px;
     }
 
     .collapse {
@@ -54,7 +55,8 @@ if (isset($_SESSION["Username"])) {
                 echo "<h4> Tasks in " . $row["ProjectName"] . ":</h4>
                         <ul>";
                 while ($task_row = $task_query->fetch_assoc()) {
-                    echo "<li id='task-details'>{$task_row["TaskName"]} - {$task_row["Description"]} - {$task_row["DueDate"]} - {$task_row["Priority"]} - {$task_row["Status"]}
+                    $dueDateFormatted = date("d-m-Y", strtotime($task_row["DueDate"]));
+                    echo "<li id='task-details'>{$task_row["TaskName"]} - {$task_row["Description"]} - {$dueDateFormatted} - {$task_row["Priority"]} - {$task_row["Status"]}
                         <button class='btn btn-secondary btn-sm more-btn' data-taskid='{$task_row["TaskID"]}' data-taskname='{$task_row["TaskName"]}'>More</button>
                         <form action='delete_task.php' method='post' style='display: inline-block;'>
                             <input type='hidden' name='taskID' value='{$task_row["TaskID"]}'>
@@ -93,11 +95,19 @@ if (isset($_SESSION["Username"])) {
                                 </div>
                                 <div class='mb-3'>
                                     <label for='taskPriority'>Priority:</label>
-                                    <input id='taskPriority' name='taskPriority' class='form-control' type='text'/>
+                                    <select id='taskPriority' name='taskPriority' class='form-control'>
+                                        <option value='High'>High</option>
+                                        <option value='Medium'>Medium</option>
+                                        <option value='Low'>Low</option>
+                                    </select>
                                 </div>
                                 <div class='mb-3'>
                                     <label for='taskStatus'>Status:</label>
-                                    <input id='taskStatus' name='taskStatus' class='form-control' type='text'/>
+                                    <select id='taskStatus' name='taskStatus' class='form-control'>
+                                        <option value='Not Started'>Not Started</option>
+                                        <option value='In Progress'>In Progress</option>
+                                        <option value='Completed'>Completed</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class='modal-footer'>
