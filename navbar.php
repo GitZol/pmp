@@ -33,21 +33,26 @@
                     echo '
                     <li class="nav-item">
                         <a class="nav-link" href="home.php">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#invitationsModal">Invitations</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                            '. $row["Username"] .'
-                            <img class="rounded-circle" height="25" width="25" alt="Avatar" loading="lazy" style="object-fit: cover;" src="img/pfp/' . $row["PFPName"] . '" />
-                        </a>
-                    <ul class="dropdown-menu dropdown-menu-lg-end" style="min-width:inherit;">
-                        <li><a class="dropdown-item" href="account.php">Details</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-                    </ul>
-                    </li>
+                    </li>';
+                    if (basename($_SERVER['PHP_SELF']) === 'home.php') {
+                        echo '
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#invitationsModal">Invitations</a>
+                        </li>';
+                    }
+            
+                    echo '
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                '. $row["Username"] .'
+                                <img class="rounded-circle" height="25" width="25" alt="Avatar" loading="lazy" style="object-fit: cover;" src="img/pfp/' . $row["PFPName"] . '" />
+                            </a>
+                        <ul class="dropdown-menu dropdown-menu-lg-end" style="min-width:inherit;">
+                            <li><a class="dropdown-item" href="account.php">Details</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                        </ul>
+                        </li>
                     ';
                 } else {
                     echo '

@@ -78,7 +78,6 @@ if (!isset($_SESSION["UserID"])){
             </div>
         </div>
 
-
         <div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -153,8 +152,8 @@ if (!isset($_SESSION["UserID"])){
 
                         echo "<form id='invitationForm' action='handle_invitation.php' method='post'>
                         <input type='hidden' name='invitation_id' value='{$invitation['InvitationID']}'>
-                               <button type='button' name='accept' class='btn btn-success' onclick='handleInvitation(`accept`)'>Accept</button>
-                               <button type='button' name='decline' class='btn btn-danger' onclick='handleInvitation(`decline`)'>Decline</button>
+                                <button type='button' name='accept' class='btn btn-success' onclick='handleInvitation(`accept`)'>Accept</button>
+                                <button type='button' name='decline' class='btn btn-danger' onclick='handleInvitation(`decline`)'>Decline</button>
                             </form> 
                         <hr>";
                     }
@@ -266,6 +265,7 @@ if (!isset($_SESSION["UserID"])){
             .then(response => response.text())
             .then(result => {
                 console.log(result);
+                $('#inviteModal').modal('hide');
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -287,8 +287,7 @@ if (!isset($_SESSION["UserID"])){
         .then(response => response.text())
         .then(result => {
             console.log(result);
-            const modal = new bootstrap.Modal(document.getElementById('invitationsModal'));
-            modal.hide();
+            $('#invitationsModal').modal('hide');
             location.reload();
         })
         .catch(error => {
