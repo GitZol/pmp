@@ -20,12 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userProjectResult = $checkUserProjectStmt->get_result();
 
         if ($userProjectResult->num_rows > 0) {
-            echo "User is already in the project";
-            exit();
+            $error_message = "User is already in the project";
         }
     } else {
-        echo "Error checling user project: " . $checkUserProjectStmt->error;
-        exit();
+        $error_message = "Error checling user project: " . $checkUserProjectStmt->error;
     }
     $checkUserProjectStmt->close();
 
@@ -36,26 +34,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $invitationResult = $checkInvitationStmt->get_result();
 
         if ($invitationResult->num_rows > 0) {
-            echo "Invitation already sent";
-            exit();
+            $error_message = "Invitation already sent";
         }
     } else {
-        echo "Error checking invitation: " . $checkInvitationStmt->error;
-        exit();
+        $error_message = "Error checking invitation: " . $checkInvitationStmt->error;
     }
 
     $checkInvitationStmt->close();
-    $insertStmt = $mysqli->prepare("INSERT INTO invitation (SenderUserID, ReceiverUserID, ProjectID, Status) VALUES (?, ?, ?, 'pending')");
-    $insertStmt->bind_param("iii", $senderUserID, $receiverUserID, $projectID);
 
-    if ($insertStmt->execute()) {
-        echo "Invitation sent successfully";
-    } else {
-        echo "Error sending invitation: " . $insertStmt->error;
+    if (!isset($error_message)) {
+        $insertStmt = $mysqli->prepare("INSERT INTO invitation (SenderUserID, ReceiverUserID, ProjectID, Status) VALUES (?, ?, ?, 'pending')");
+        $insertStmt->bind_param("iii", $senderUserID, $receiverUserID, $projectID);
+    
+        if ($insertStmt->execute()) {
+            $success_message = "Invitation sent successfully";
+        } else {
+            $error_message = "Error sending invitation: " . $insertStmt->error;
+        }
+    
+        $insertStmt->close();
     }
 
-    $insertStmt->close();
     $mysqli->close();
+
+    if (isset($error_message)) {
+        echo $error_message;
+    } elseif (isset($success_message)) {
+        echo $success_message;
+    } else {
+        echo "Unexpected error";
+    }
 
 } else {
     echo "Invalid request method";
