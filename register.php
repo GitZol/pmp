@@ -41,44 +41,66 @@
                 $password = password_hash($password, PASSWORD_DEFAULT);
                 
                 // Code for profile picture upload starts
-                $file = $_FILES['uploadPFP'];
-                $fileName = $file['name'];
-                $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-                $fileSize = $file['size'];
-                $fileTmpName = $file['tmp_name'];
 
-                if (empty($fileName) || !exif_imagetype($fileTmpName)) {
-                echo "Invalid image file.";
-                exit;
-                }
+                 $file = $_FILES['uploadPFP'];
+                 $fileName = $file['name'];
+                 $fileTmpName = $file['tmp_name'];
+                 $targetDir = 'img/pfp/';
 
-                if ($fileSize > 1024000) {
-                echo "File size exceeds maximum limit of 1MB.";
-                exit;
-                }
+                if (empty($fileName)) {
+                    $uniqueFileName = "user-circle.256x256.png";
+                    $targetFile = $targetDir . $uniqueFileName;
+                    $fileSize = 0; 
+                    $fileExtension = 'png'; 
+                 } else {
+                    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+                    $fileSize = $file['size'];
+                    if (!exif_imagetype($fileTmpName)) {
+                        echo "Invalid image file.";
+                        exit;
+                            }
 
-                $targetDir = 'img/pfp/';
+                    if ($fileSize > 1024000) {
+                    echo "File size exceeds maximum limit of 1MB.";
+                    exit;
+                            } 
+
                 $uniqueFileName = uniqid() . '.' . $fileExtension;
-                $targetFile = $targetDir . $uniqueFileName;
+                $targetFile = $targetDir . $uniqueFileName; // Set target file for uploaded image
 
                 if (!move_uploaded_file($fileTmpName, $targetFile)) {
-                echo "Error uploading file.";
-                exit;
-                }
-                // Code for profile picture upload ends
+                    echo "Error uploading file.";
+                    exit;
+        }
+ }
+ // Code for profile picture upload ends
 
-                if ($stmt->execute()) {
-                    echo "New account created successfully!";
-                    header("Location: login.php");
-                    exit();
-                } else {
-                    echo "Error: ". $stmt->error;
-                }
+ $stmt = $mysqli->prepare(
+     "INSERT INTO user (Username, Email, Password, FirstName, LastName, PFPName, PFPNameOriginal, PFPSize, PFPType)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+ );
 
-                $stmt->close();
-                $mysqli->close();
-            }
-            ?>
+ $username = $_POST["username"];
+ $email = $_POST["email"];
+ $password = $_POST["password"];
+ $firstName = $_POST["firstName"];
+ $lastName = $_POST["lastName"];
+ $password = password_hash($password, PASSWORD_DEFAULT);
+
+ $stmt->bind_param("sssssssss", $username, $email, $password, $firstName, $lastName, $uniqueFileName, $fileName, $fileSize, $fileExtension);
+
+ if ($stmt->execute()) {
+     echo "New account created successfully!";
+     header("Location: login.php");
+     exit();
+ } else {
+     echo "Error: " . $stmt->error;
+ }
+
+ $stmt->close();
+ $mysqli->close();
+}
+?>
 
             <form action="register.php" method="post" enctype="multipart/form-data">
                 <div class="mb-3">

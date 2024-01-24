@@ -87,10 +87,10 @@ if ($stmtUpdate) {
 
     if ($stmtUpdate->affected_rows > 0) {
         echo "Update successful";
-        header("Location: account.php");
+        header("Location: account.php?message=update_successful");
         exit();
     } else {
-        echo "Update failed";
+        header('Location: account.php?message=no_changes');
     }
 } else {
     echo "Error: " . $mysqli->error;
