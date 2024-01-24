@@ -1,18 +1,8 @@
 <?php
 session_start();
-
-$hostname = "127.0.0.1";
-$username = "root";
-$password = "";
-$db_name = "project_management_platform";
+include 'db_connection.php';
 
 if (isset($_POST["createProject"])) {
-    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-    if ($mysqli->connect_error) {  
-        die("Connection failed: ". $mysqli->connect_error);
-    }
-
     $projectName = isset($_POST["projectName"]) ? $_POST["projectName"] : '';
     $projectDesc = isset($_POST["description"]) ? $_POST["description"] : '';
     $startDate = isset($_POST["startDate"]) ? $_POST["startDate"] : '';

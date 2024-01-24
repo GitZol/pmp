@@ -1,17 +1,9 @@
 <?php
+include 'db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['taskID'])) {
     $taskID = $_GET['taskID'];
 
-    $hostname = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $db_name = "project_management_platform";
-    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-    if ($mysqli->connect_error) {
-        die("Connection failed: ". $mysqli->connect_error);
-    }
 
     $commentsData = [];
     $stmt = $mysqli->prepare("SELECT c.CommentID, c.Content, c.Timestamp, c.UserID, c.TaskID, u.Username

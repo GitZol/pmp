@@ -1,25 +1,17 @@
 <?php
 session_start();
+include 'db_connection.php';
+
 if (!isset($_SESSION["UserID"])) {
     header("Location: login.php");
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $hostname = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $db_name = "project_management_platform";
 
     $senderUserID = $_SESSION['UserID'];
     $receiverUserID = $_POST['receiverUserID'];
     $projectID = $_POST['projectID'];
-
-    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
 
     $checkUserProjectStmt = $mysqli->prepare("SELECT * FROM user_project WHERE UserID = ? AND ProjectID = ?");
     $checkUserProjectStmt->bind_param("ii", $receiverUserID, $projectID);

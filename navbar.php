@@ -7,17 +7,10 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <?php
+                include 'db_connection.php';
+                
                 $loggedIn = isset($_SESSION["UserID"]);
                 if ($loggedIn) {
-                    $hostname = "127.0.0.1";
-                    $username = "root";
-                    $password = "";
-                    $db_name = "project_management_platform";
-        
-                    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-                    if ($mysqli->connect_error) {
-                        die("Connection failed: " . $mysqli->connect_error);
-                    }
         
                     $userID = $_SESSION["UserID"]; 
                     $query = "SELECT Username, PFPName FROM user WHERE UserID = ?";

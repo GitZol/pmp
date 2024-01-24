@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'db_connection.php';
 
 if (!isset($_SESSION["UserID"])) {
     header("Location: login.php");
@@ -7,18 +8,8 @@ if (!isset($_SESSION["UserID"])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["taskID"])) {
-    $hostname = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $db_name = "project_management_platform";
 
     $taskID = $_POST["taskID"];
-
-    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
 
     $stmt = $mysqli->prepare("SELECT FileID, FileName, FileType, UploadDate, FileURL FROM file WHERE TaskID = ?");
     $stmt->bind_param("i", $taskID);

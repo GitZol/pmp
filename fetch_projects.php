@@ -12,20 +12,11 @@
 
 <div class="container">
 <?php
+include 'db_connection.php';
+
 if (isset($_SESSION["Username"])) {
     $username = $_SESSION["Username"];
     echo "<h2>Welcome, $username</h2>";
-
-    $hostname = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $db_name = "project_management_platform";
-
-    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-    if ($mysqli->connect_error) {
-        die("Connection failed: ". $mysqli->connect_error);
-    }
 
     $userID = $_SESSION["UserID"];
     $createdProjects_query = $mysqli->query("SELECT ProjectID, ProjectName FROM project WHERE UserID = $userID");

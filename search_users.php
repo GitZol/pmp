@@ -1,4 +1,6 @@
 <?php
+include 'db_connection.php';
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["search"])) {
     $searchTerm = $_POST["search"];
 
@@ -6,17 +8,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["search"])) {
     if (empty($searchTerm)) {
         echo json_encode(["error" => "Search term is empty"]);
         exit();
-    }
-
-    $hostname = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $db_name = "project_management_platform";
-
-    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
     }
 
     $stmt = $mysqli->prepare("SELECT UserID, Username, Email FROM user WHERE Username LIKE ? OR Email LIKE ?");

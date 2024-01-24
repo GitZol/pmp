@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'db_connection.php';
 
 if (!isset($_SESSION["Username"] )) {
     header("Location: login.php");
@@ -9,17 +10,6 @@ if (!isset($_SESSION["Username"] )) {
 if (isset($_POST["projectID"])) {
     $projectID = $_POST["projectID"];
     $userID = $_SESSION["UserID"];
-
-    $hostname = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $db_name = "project_management_platform";
-
-    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
 
     $checkPermissionStmt = $mysqli->prepare("SELECT UserID FROM project WHERE ProjectID = ? AND UserID = ?");
     $checkPermissionStmt->bind_param("ii", $projectID, $userID);
