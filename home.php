@@ -165,6 +165,9 @@ if (!isset($_SESSION["UserID"])){
             </div>
         </div>
     </div>
+    <div id="invitationErrorContainer" class="alert <?php echo isset($error_message) ? 'alert-danger' : 'd-none'; ?>" role="alert">
+        <?php echo isset($error_message) ? $error_message : ''; ?>
+    </div>
     <script>
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault(); 

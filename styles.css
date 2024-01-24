@@ -21,6 +21,38 @@
     font-size: 1.5rem;
 }
 
+#task-details {
+    list-style-type: none;
+    margin-bottom: 10px;
+    flex-grow: 1;
+}
+
+.task-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.task-actions {
+    margin-left: 10px;
+}
+
+.task-name {
+    font-weight: bold;
+}
+
+.task-due-date,
+.task-priority,
+.task-status {
+    margin: 5px 0;
+}
+
+.collapse {
+    transition: height 0.3s ease-in-out !important;
+}
+
 .comment-box {
     border: 1px solid #ccc;
     margin-bottom: 10px;
@@ -45,6 +77,10 @@
     min-height: 400px;
     max-height: 400px;
     overflow-y: auto;
+}
+
+.comment-content .btn {
+    margin-top: 10px;
 }
 
 .dropdown {
@@ -168,6 +204,7 @@
 
 .card {
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .input-group .btn {

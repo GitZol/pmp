@@ -1,16 +1,3 @@
-<style>
-    #task-details {
-        list-style-type: none;
-        margin-bottom: 10px;
-    }
-
-    .collapse {
-        transition: height 0.3s ease-in-out !important;
-    }
-</style>
-
-
-
 <div class="container">
 <?php
 include 'db_connection.php';
@@ -39,7 +26,7 @@ if (isset($_SESSION["Username"])) {
         
                 <form id='deleteProjectForm' method='post' style='display: inline-block;'>
                     <input type='hidden' name='projectID' value='{$row["ProjectID"]}'>
-                    <input type='submit' value='Delete Project' class='btn btn-danger btn-sm'>
+                    <span class='delete-icon' data-project-id='{$row["ProjectID"]}' title='Delete Project'>&#128465;</span>
                 </form>
         
                 <div class='collapse' id='project{$row["ProjectID"]}'>
@@ -56,13 +43,22 @@ if (isset($_SESSION["Username"])) {
                         <ul>";
                 while ($task_row = $task_query->fetch_assoc()) {
                     $dueDateFormatted = date("d-m-Y", strtotime($task_row["DueDate"]));
-                    echo "<li id='task-details'>{$task_row["TaskName"]} - {$task_row["Description"]} - {$dueDateFormatted} - {$task_row["Priority"]} - {$task_row["Status"]}
-                        <button class='btn btn-secondary btn-sm more-btn' data-taskid='{$task_row["TaskID"]}' data-taskname='{$task_row["TaskName"]}'>More</button>
-                        <form action='delete_task.php' method='post' style='display: inline-block;'>
-                            <input type='hidden' name='taskID' value='{$task_row["TaskID"]}'>
-                            <input type='submit' value='Delete' class='btn btn-danger btn-sm'>
-                        </form>
-                    </li>";
+                    echo "<div class='task-container'>
+                        <div class='task-details'>
+                            <p class='task-name'>{$task_row["TaskName"]}</p>
+                            <p class='task-description'>{$task_row["Description"]}</p>
+                            <p class='task-due-date'>Due Date: {$dueDateFormatted}</p>
+                            <p class='task-priority'>Priority: {$task_row["Priority"]}</p>
+                            <p class='task-status'>Status: {$task_row["Status"]}</p>
+                        </div>
+                        <div class='task-actions'>
+                            <button class='btn btn-secondary btn-sm more-btn' data-taskid='{$task_row["TaskID"]}' data-taskname='{$task_row["TaskName"]}'>More</button>
+                            <form action='delete_task.php' method='post' style='display: inline-block;'>
+                                <input type='hidden' name='taskID' value='{$task_row["TaskID"]}'>
+                                <span class='delete-icon' data-task-id='{$task_row["TaskID"]}' title='Delete Task'>&#128465;</span>
+                            </form>
+                        </div>
+                    </div>";
                 }
                 echo "</ul>";
 
@@ -137,23 +133,15 @@ if (isset($_SESSION["Username"])) {
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const addTaskButtons = document.querySelectorAll('[id^="addTaskBtn"]');
-        const deleteProjectForms = document.querySelectorAll('[id^="deleteProjectForm"]');
+        const deleteProjectIcons = document.querySelectorAll('.delete-icon[data-project-id]');
+        const deleteTaskIcons = document.querySelectorAll('.delete-icon[data-task-id]');
 
-        addTaskButtons.forEach(function(addTaskBtn) {
-            addTaskBtn.addEventListener('click', function() {
-                var projectID = addTaskBtn.getAttribute('id').replace('addTaskBtn', '');
-                var addTaskModal = document.getElementById('addTaskModal' + projectID);
-                var modal = new bootstrap.Modal(addTaskModal);
-                modal.show();
-            });
-        });
-
-        deleteProjectForms.forEach(function(deleteForm) {
-            deleteForm.addEventListener('submit', function(event) {
-                event.preventDefault();
+        deleteProjectIcons.forEach(function(deleteIcon) {
+            deleteIcon.addEventListener('click', function() {
                 var confirmDelete = confirm("Are you sure you want to delete this project?");
                 if (confirmDelete) {
-                    var formData = new FormData(deleteForm);
+                    var formData = new FormData();
+                    formData.append('projectID', deleteIcon.getAttribute('data-project-id'));
 
                     fetch('delete_project.php', {
                         method: 'POST',
@@ -163,7 +151,7 @@ if (isset($_SESSION["Username"])) {
                         if (response.ok) {
                             console.log("Project deleted successfully");
                             window.location.href = 'home.php';
-                        } else if (response.status === 403){
+                        } else if (response.status === 403) {
                             return response.text();
                         } else {
                             return Promise.reject('Error deleting project. Please try again later.');
@@ -187,6 +175,56 @@ if (isset($_SESSION["Username"])) {
             });
         });
 
+        deleteTaskIcons.forEach(function(deleteIcon) {
+            deleteIcon.addEventListener('click', function() {
+                var confirmDelete = confirm("Are you sure you want to delete this task?");
+                if (confirmDelete) {
+                    var formData = new FormData();
+                    formData.append('taskID', deleteIcon.getAttribute('data-task-id'));
+
+                    fetch('delete_task.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("Task deleted successfully");
+                            window.location.href = 'home.php';
+                        } else if (response.status === 403) {
+                            return response.text();
+                        } else {
+                            return Promise.reject('Error deleting task. Please try again later.');
+                        }
+                    })
+                    .then(errorMessage => {
+                        if (errorMessage) {
+                            displayMessage(errorMessage);
+                            setTimeout(() => {
+                                const container = document.getElementById('messageContainer');
+                                container.innerHTML = '';
+                            }, 3000);
+                        } else {
+                            console.error('Error deleting task. Please try again later.');
+                        }
+                    })
+                    .finally(() => {
+                        return;
+                    });
+                }
+            });
+        });
+
+
+        addTaskButtons.forEach(function(addTaskBtn) {
+            addTaskBtn.addEventListener('click', function() {
+                var projectID = addTaskBtn.getAttribute('id').replace('addTaskBtn', '');
+                var addTaskModal = document.getElementById('addTaskModal' + projectID);
+                var modal = new bootstrap.Modal(addTaskModal);
+                modal.show();
+            });
+        });
+
+
         function displayMessage(message) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'alert alert-danger';
@@ -200,7 +238,3 @@ if (isset($_SESSION["Username"])) {
         
     });
 </script>
-
-
-
-
