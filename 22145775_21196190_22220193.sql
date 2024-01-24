@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2024 at 05:18 PM
+-- Generation Time: Jan 24, 2024 at 02:13 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -40,7 +40,8 @@ CREATE TABLE `comment` (
 --
 
 INSERT INTO `comment` (`CommentID`, `Content`, `Timestamp`, `UserID`, `TaskID`) VALUES
-(36, 'hi', '2024-01-19 15:28:21', 19, 41);
+(36, 'hi', '2024-01-19 15:28:21', 19, 41),
+(45, 'hi', '2024-01-23 17:13:20', 18, 43);
 
 -- --------------------------------------------------------
 
@@ -58,6 +59,34 @@ CREATE TABLE `file` (
   `TaskID` int(11) NOT NULL,
   `ProjectID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `file`
+--
+
+INSERT INTO `file` (`FileID`, `FileName`, `FileType`, `UploadDate`, `FileURL`, `UserID`, `TaskID`, `ProjectID`) VALUES
+(75, 'AIproject.txt_65b059d228fc5.txt', 'text/plain', '2024-01-24', '', 19, 41, 33);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invitation`
+--
+
+CREATE TABLE `invitation` (
+  `InvitationID` int(11) NOT NULL,
+  `SenderUserID` int(11) NOT NULL,
+  `ReceiverUserID` int(11) NOT NULL,
+  `ProjectID` int(11) NOT NULL,
+  `Status` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `invitation`
+--
+
+INSERT INTO `invitation` (`InvitationID`, `SenderUserID`, `ReceiverUserID`, `ProjectID`, `Status`) VALUES
+(16, 19, 19, 33, 'pending');
 
 -- --------------------------------------------------------
 
@@ -79,8 +108,11 @@ CREATE TABLE `project` (
 --
 
 INSERT INTO `project` (`ProjectID`, `ProjectName`, `Description`, `StartDate`, `EndDate`, `UserID`) VALUES
-(32, 'test', 'test', '2023-12-18', '2023-12-18', 18),
-(33, 'Project1', 'testing project1', '2024-01-19', '2024-01-19', 19);
+(33, 'Project1', 'testing project1', '2024-01-19', '2024-01-19', 19),
+(36, 'p2', 'p', '2024-01-23', '2024-01-23', 19),
+(57, 'cacw', 'sca', '2024-01-24', '2024-01-24', 19),
+(58, 'ttet', 'evv', '2024-01-24', '2024-01-24', 19),
+(59, 'dew', 'dwe', '2024-01-24', '2024-01-24', 19);
 
 -- --------------------------------------------------------
 
@@ -104,8 +136,8 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`TaskID`, `TaskName`, `Description`, `DueDate`, `Priority`, `Status`, `UserID`, `ProjectID`) VALUES
-(40, 'test1', 'test1', '2023-12-18', 'low', 'not started', 18, 32),
-(41, 'task1', 'testing task1', '2024-01-19', 'medium', 'started', 19, 33);
+(41, 'task1', 'testing task1', '2024-01-19', 'medium', 'started', 19, 33),
+(43, 't', 't', '2024-01-23', '', '', 19, 36);
 
 -- --------------------------------------------------------
 
@@ -133,7 +165,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`UserID`, `Username`, `Email`, `Password`, `FirstName`, `LastName`, `Role`, `PFPName`, `PFPNameOriginal`, `PFPSize`, `PFPType`) VALUES
 (18, 'motest', 'mo@mo.com', '$2y$10$LYE9tBOl8mzkCfWVgBCLru0c0T1aGG8VhYv/lPbvTIx8H9ZbJbHUm', 'mo', 'test1', NULL, '658076d0430e2.png', 'IMG-20230417-WA0000.png', '597101', 'png'),
-(19, 'mo', 'mo@mo.com', '$2y$10$Reeao54ZstMim5Jq6ngcw.H37unL5v4M5wgbQVz6NCm4LrKO283GG', 'mo', 'mo', NULL, '65aa8afad670a.png', '658076d0430e2.png', '597101', 'png');
+(19, 'mo', 'mo@mo.com', '$2y$10$Reeao54ZstMim5Jq6ngcw.H37unL5v4M5wgbQVz6NCm4LrKO283GG', 'mo', 'mo1', NULL, '65aa8afad670a.png', '658076d0430e2.png', '597101', 'png'),
+(20, 'j', 'j@j.com', '$2y$10$Y3JOMe1doIRB5i6TeUxszeI.t9Hno.4TicIdklDRxwosI5oXDCdym', 'j', 'j', NULL, '65b061e0dcfca.png', 'MicrosoftTeams-image (1).png', '644537', 'png');
 
 -- --------------------------------------------------------
 
@@ -147,6 +180,17 @@ CREATE TABLE `user_project` (
   `ProjectID` int(11) NOT NULL,
   `Role` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `user_project`
+--
+
+INSERT INTO `user_project` (`UserProjectID`, `UserID`, `ProjectID`, `Role`) VALUES
+(3, 18, 36, NULL),
+(4, 18, 33, NULL),
+(8, 18, 57, NULL),
+(9, 18, 58, NULL),
+(10, 18, 59, NULL);
 
 -- --------------------------------------------------------
 
@@ -183,6 +227,15 @@ ALTER TABLE `file`
   ADD KEY `FK_File_Project` (`ProjectID`);
 
 --
+-- Indexes for table `invitation`
+--
+ALTER TABLE `invitation`
+  ADD PRIMARY KEY (`InvitationID`),
+  ADD KEY `SenderUserID` (`SenderUserID`),
+  ADD KEY `ReceiverUserID` (`ReceiverUserID`),
+  ADD KEY `ProjectID` (`ProjectID`);
+
+--
 -- Indexes for table `project`
 --
 ALTER TABLE `project`
@@ -208,7 +261,7 @@ ALTER TABLE `user`
 --
 ALTER TABLE `user_project`
   ADD PRIMARY KEY (`UserProjectID`),
-  ADD KEY `FK_UserProject_User` (`UserID`),
+  ADD KEY `UserID` (`UserID`),
   ADD KEY `FK_UserProject_Project` (`ProjectID`);
 
 --
@@ -227,37 +280,43 @@ ALTER TABLE `user_project_role`
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `CommentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `CommentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `file`
 --
 ALTER TABLE `file`
-  MODIFY `FileID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `FileID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+
+--
+-- AUTO_INCREMENT for table `invitation`
+--
+ALTER TABLE `invitation`
+  MODIFY `InvitationID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
-  MODIFY `ProjectID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `ProjectID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `TaskID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `user_project`
 --
 ALTER TABLE `user_project`
-  MODIFY `UserProjectID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `UserProjectID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user_project_role`
@@ -285,6 +344,14 @@ ALTER TABLE `file`
   ADD CONSTRAINT `FK_File_User` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`);
 
 --
+-- Constraints for table `invitation`
+--
+ALTER TABLE `invitation`
+  ADD CONSTRAINT `invitation_ibfk_1` FOREIGN KEY (`SenderUserID`) REFERENCES `user` (`UserID`),
+  ADD CONSTRAINT `invitation_ibfk_2` FOREIGN KEY (`ReceiverUserID`) REFERENCES `user` (`UserID`),
+  ADD CONSTRAINT `invitation_ibfk_3` FOREIGN KEY (`ProjectID`) REFERENCES `project` (`ProjectID`);
+
+--
 -- Constraints for table `project`
 --
 ALTER TABLE `project`
@@ -301,8 +368,9 @@ ALTER TABLE `task`
 -- Constraints for table `user_project`
 --
 ALTER TABLE `user_project`
-  ADD CONSTRAINT `FK_UserProject_Project` FOREIGN KEY (`ProjectID`) REFERENCES `project` (`ProjectID`),
-  ADD CONSTRAINT `FK_UserProject_User` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`);
+  ADD CONSTRAINT `FK_UserProject_Project` FOREIGN KEY (`ProjectID`) REFERENCES `project` (`ProjectID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `user_project_ibfk_1` FOREIGN KEY (`ProjectID`) REFERENCES `project` (`ProjectID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `user_project_ibfk_2` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `user_project_role`
