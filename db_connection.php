@@ -3,7 +3,7 @@
 $hostname = "127.0.0.1";
 $username = "root";
 $password = "";
-$db_name = "project_management_platform";
+$db_name = "22145775_21196190_22220193";
 
 $mysqli = new mysqli($hostname, $username, $password, $db_name);
 
