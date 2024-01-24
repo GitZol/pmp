@@ -13,17 +13,9 @@
     <div class="card border-1 p-4">
             <h2>Register</h2>
             <?php
-            $hostname = "127.0.0.1";
-            $username = "root";
-            $password = "";
-            $db_name = "project_management_platform";
+            include 'db_connection.php';
 
             if (isset($_POST["register"])) {
-                $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-                if ($mysqli->connect_error) {
-                    die("Connection failed: ". $mysqli->connect_error);
-                }
 
                 $stmt = $mysqli->prepare(
                     "INSERT INTO user (Username, Email, Password, FirstName, LastName, PFPName, PFPNameOriginal, PFPSize, PFPType)

@@ -1,0 +1,26 @@
+imagenet
+transfer learning
+alexnet // trained for animals and objects
+fine tuning network on new dataset
+uses softmax classifier
+(look for better classifiers)
+
+transformer arc
+
+auto enconders // not trained on a specific datasets, remove noise, generative model
+summarises features
+dont need labelling
+reconstructs input
+
+
+
+xgboost or different classification
+
+compete with pre trained model
+
+feature engineering
+
+
+The Task: Use Convolutional autoencoder (their codes to add shallow ML (i.e., SVM, RF and Xgboost). Please apply this on CiFAR100 (try to beat the benchmark, 96)  
+
+

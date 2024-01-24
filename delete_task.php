@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'db_connection.php';
 
 if (!isset($_SESSION["Username"] )) {
     header("Location: login.php");
@@ -8,17 +9,6 @@ if (!isset($_SESSION["Username"] )) {
 
 if (isset($_POST["taskID"])) {
     $taskID = $_POST["taskID"];
-
-    $hostname = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $db_name = "project_management_platform";
-
-    $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
 
     $delete_query = $mysqli->prepare("DELETE FROM task WHERE TaskID = ?");
     $delete_query->bind_param("i", $taskID);

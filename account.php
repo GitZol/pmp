@@ -39,18 +39,10 @@
     <h4>Account Details</h4>
     <div class="card border-1 p-4" style="width: 22rem;">    
         <?php
+        include 'db_connection.php';
         if (!isset($_SESSION["UserID"])) {
             header("Location: login.php");
             exit();
-        }
-        $hostname = "127.0.0.1";
-        $username = "root";
-        $password = "";
-        $db_name = "project_management_platform";
-
-        $mysqli = new mysqli($hostname, $username, $password, $db_name);
-        if ($mysqli->connect_error) {
-            die("Connection failed: " . $mysqli->connect_error);
         }
 
         $userID = $_SESSION["UserID"]; 

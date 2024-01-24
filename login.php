@@ -10,66 +10,57 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
 <body>
-    <?php session_start();
-        include 'navbar.php';
-    ?>
+    
     <div class="container d-flex flex-column align-items-center justify-content-center vh-100">
     
         <div class="card border-1 p-4">
             <h2>Login</h2>
             <?php
-            $hostname = "127.0.0.1";
-            $username = "root";
-            $password = "";
-            $db_name = "project_management_platform";
+            session_start();
+            include 'db_connection.php';
 
             if (isset($_POST["login"])) {
-                $mysqli = new mysqli($hostname, $username, $password, $db_name);
-
-                if ($mysqli->connect_error) {
-                    die("Connection failed: ". $mysqli->connect_error);
-                }
 
                 $stmt = $mysqli->prepare("SELECT UserID, password FROM user WHERE Username=?"
                 );
 
-            $stmt->bind_param("s", $username);
+                $stmt->bind_param("s", $username);
 
-            $username = $_POST["username"];
-            $password = $_POST["password"];
-            $stmt->execute();
-            $stmt->store_result();
+                $username = $_POST["username"];
+                $password = $_POST["password"];
+                $stmt->execute();
+                $stmt->store_result();
 
-            $user_retrieve_error = "That user was not found!";
-            $password_retrieve_error = "That password may have been incorrect!";
+                $user_retrieve_error = "That user was not found!";
+                $password_retrieve_error = "That password may have been incorrect!";
 
-            if($stmt->num_rows > 0) {
-                $stmt->bind_result($UserID, $hashed_password);
-                $stmt->fetch();
+                if($stmt->num_rows > 0) {
+                    $stmt->bind_result($UserID, $hashed_password);
+                    $stmt->fetch();
 
-                if(password_verify($password, $hashed_password)) {
-                    $_SESSION["loggedIn"] = true;
-                    $_SESSION["UserID"] = $UserID;
-                    $_SESSION["Username"] = $username;
+                    if(password_verify($password, $hashed_password)) {
+                        $_SESSION["loggedIn"] = true;
+                        $_SESSION["UserID"] = $UserID;
+                        $_SESSION["Username"] = $username;
 
-                    header("Location: home.php");
-                    exit();
+                        header("Location: home.php");
+                        exit();
+                    } else {
+                        echo '
+                        <div class="alert alert-danger" role="alert">'
+                            . $password_retrieve_error .
+                        '</div>';
+                    }
                 } else {
                     echo '
-                    <div class="alert alert-danger" role="alert">'
-                        . $password_retrieve_error .
-                    '</div>';
+                        <div class="alert alert-danger" role="alert">'
+                            . $user_retrieve_error .
+                        '</div>';
                 }
-            } else {
-                echo '
-                    <div class="alert alert-danger" role="alert">'
-                        . $user_retrieve_error .
-                    '</div>';
-            }
 
-            $stmt->close();
-            $mysqli->close();
-        }
+                $stmt->close();
+                $mysqli->close();
+            }
         ?>
 
         <form class="login-form" action="login.php" method="post">
